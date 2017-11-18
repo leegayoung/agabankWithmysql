@@ -1,0 +1,11 @@
+package Aga;
+
+public class dataSave {
+	
+	static String myacc = null;
+	static String receiverAcc = null;
+	static String money = null;
+	static String type = null;
+	static String ssNumber = null;
+	static int password = 0;
+}

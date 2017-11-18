@@ -1,0 +1,304 @@
+package libray;
+
+import java.awt.BorderLayout;
+import java.awt.Choice;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+
+public class bbb{
+	
+	JFrame mainf = new JFrame();
+	JPanel mainp = new JPanel();
+	Font font1 = new Font("배달의민족 주아", Font.PLAIN, 50) ;
+	Font font1_1 = new Font("배달의민족 주아", Font.PLAIN, 40) ;
+	Font font2 = new Font("-윤고딕110", Font.PLAIN, 20) ;
+	
+	public bbb(){
+		
+		mainf.setSize(1280,800);
+		mainp.setSize(1280,800);
+		
+		JPanel action = new JPanel();
+		JPanel board = new JPanel();
+		JPanel keypad = new JPanel();
+		JPanel input = new JPanel();
+		JPanel pbt = new JPanel();
+		
+		mainf.setLayout(null);
+		mainp.setLayout(null);
+		action.setLayout(null);
+		board.setLayout(null);
+		keypad.setLayout(new GridLayout(4,3));
+		input.setLayout(null);
+		
+		pbt.setSize(300,100); //액션바 버튼
+		action.setSize(1280,100); //액션바
+		board.setSize(1280,800); //하단 패널
+		input.setSize(855,620); //입력창
+		keypad.setSize(380,500); // 키패드
+		
+		board.setLocation(0,-10);
+		
+		JButton jb = new JButton(new ImageIcon("image/backbt.png"));
+		jb.setBorderPainted(false);
+		jb.setContentAreaFilled(false);
+		jb.setFocusPainted(false);
+	
+		JLabel jla = new JLabel("출금 ");
+		jla.setFont(font1);
+		jla.setForeground(Color.white);
+	
+	
+		pbt.add(jb,BorderLayout.WEST);
+		pbt.setBackground(new Color(46,89,138));
+		pbt.add(jla);
+		
+		action.setBackground(new Color(46,89,138));
+		action.add(pbt);
+	
+		
+		input.setLocation(20,130);
+		input.setBackground(Color.white);
+		
+		JPanel textp = new JPanel();
+		textp.setLayout(null);
+		JLabel textl = new JLabel("출금 금액과 분류를 입력해주세요.");
+		textl.setFont(font2);
+		textl.setForeground(Color.gray);
+		textp.setBackground(Color.white);
+		textp.add(textl);
+		textl.setSize(855,40);
+		textp.setSize(855,40);
+		textp.setLocation(280,140);
+		input.add(textp);
+		
+		JPanel type = new JPanel(new GridLayout(2,7));
+		type.setSize(850,200);
+		
+		type.setLocation(3,290);
+		
+		
+		JButton []bts = new JButton[14];
+		String []types = {"간식","경조사비","교통비","관리비","식비","생활비","악세사리","여가","의류","의료","통신비","학용품","회식","기타"};
+		for(int i =0 ; i<14; i++)
+		{
+			bts[i] = new JButton(types[i]);
+			bts[i].setSize(110,100);
+			bts[i].setFont(font2);
+			bts[i].setBackground(new Color(214,231,255));
+			bts[i].setBorder(new LineBorder(Color.white, 3));
+			type.add(bts[i]);
+		}
+		
+		
+		
+		input.add(type);
+		actTestLis te = new actTestLis();
+		for(int i =0 ; i<14; i++)
+		{
+			bts[i].addActionListener(te);
+		}
+		System.out.println(te.getType());
+		
+		JTextArea ta = new JTextArea("10,000");
+		//버튼 클릭할 때마다 계속 문장 추가해서 화면에 띄워야 함
+		//while문이 좋으려나
+		
+		JButton ipbt = new JButton(new ImageIcon("image/ipbt.png"));
+		ipbt.setSize(100,50);
+		ipbt.setLocation(380,500);
+		
+
+		ipbt.setBorderPainted(false);
+		ipbt.setContentAreaFilled(false);
+		ipbt.setFocusPainted(false);
+		
+		input.add(ipbt);
+		
+		ImageIcon imgbar = new ImageIcon("image/bar.png");
+		
+		
+		JPanel tfP = new JPanel() {
+			public void paintComponent(Graphics g) {
+				g.drawImage(imgbar.getImage(), 0, 0, null);
+
+			}
+		};
+		
+		
+		tfP.setSize(600,100);
+		ta.setSize(350,60);
+		//tf.setBounds(400,80,100,300);
+		ta.setFont(font1_1);
+		tfP.setLocation(130,180);
+		ta.setLocation(250,200);
+		
+		input.add(tfP);
+		input.add(ta);
+	
+		
+		keypad.setLocation(890,190); 
+		keypad.setBackground(new Color(209,216,240));
+	
+		board.setBackground(new Color(209,216,240));
+		
+		JButton b7 = new JButton(new ImageIcon("image/key7.png"));
+		JButton b8 = new JButton(new ImageIcon("image/key8.png"));
+		JButton b9 = new JButton(new ImageIcon("image/key9.png"));
+		JButton b4 = new JButton(new ImageIcon("image/key4.png"));
+		JButton b5 = new JButton(new ImageIcon("image/key5.png"));
+		JButton b6 = new JButton(new ImageIcon("image/key6.png"));
+		JButton b1 = new JButton(new ImageIcon("image/key1.png"));
+		JButton b2 = new JButton(new ImageIcon("image/key2.png"));
+		JButton b3 = new JButton(new ImageIcon("image/key3.png"));
+		JButton b10 = new JButton(new ImageIcon("image/key10.png")); // -
+		JButton b0 = new JButton(new ImageIcon("image/key0.png"));
+		JButton b11 = new JButton(new ImageIcon("image/key11.png")); // delete
+
+		
+		b1.setBorderPainted(false);
+		b1.setContentAreaFilled(false);
+		b1.setFocusPainted(false);
+		b2.setBorderPainted(false);
+		b2.setContentAreaFilled(false);
+		b2.setFocusPainted(false);
+		b3.setBorderPainted(false);
+		b3.setContentAreaFilled(false);
+		b3.setFocusPainted(false);
+		b4.setBorderPainted(false);
+		b4.setContentAreaFilled(false);
+		b4.setFocusPainted(false);
+		b5.setBorderPainted(false);
+		b5.setContentAreaFilled(false);
+		b5.setFocusPainted(false);
+		b6.setBorderPainted(false);
+		b6.setContentAreaFilled(false);
+		b6.setFocusPainted(false);
+		b7.setBorderPainted(false);
+		b7.setContentAreaFilled(false);
+		b7.setFocusPainted(false);
+		b8.setBorderPainted(false);
+		b8.setContentAreaFilled(false);
+		b8.setFocusPainted(false);
+		b9.setBorderPainted(false);
+		b9.setContentAreaFilled(false);
+		b9.setFocusPainted(false);
+		b10.setBorderPainted(false);
+		b10.setContentAreaFilled(false);
+		b10.setFocusPainted(false);
+		b11.setBorderPainted(false);
+		b11.setContentAreaFilled(false);
+		b11.setFocusPainted(false);
+		b0.setBorderPainted(false);
+		b0.setContentAreaFilled(false);
+		b0.setFocusPainted(false);
+		
+//		b1.setLabel("1");
+//		b2.setLabel("2");
+//		b3.setLabel("3");
+//		b4.setLabel("4");
+//		b5.setLabel("5");
+//		b6.setLabel("6");
+//		b7.setLabel("7");
+//		b8.setLabel("8");
+//		b9.setLabel("9");
+//		b10.setLabel("-");
+//		b11.setLabel("*");
+//		b0.setLabel("0");
+//		
+		
+		b7.setFont(font1);
+		b8.setFont(font1);
+		b9.setFont(font1);
+		b4.setFont(font1);
+		b5.setFont(font1);
+		b6.setFont(font1);
+		b1.setFont(font1);
+		b2.setFont(font1);
+		b3.setFont(font1);
+		b10.setFont(font1);
+		b0.setFont(font1);
+		b11.setFont(font1);
+		
+		keypad.add(b7);
+		keypad.add(b8);
+		keypad.add(b9);
+		keypad.add(b4);
+		keypad.add(b5);
+		keypad.add(b6);
+		keypad.add(b1);
+		keypad.add(b2);
+		keypad.add(b3);
+		keypad.add(b10);
+		keypad.add(b0);
+		keypad.add(b11);
+		
+		
+		board.add(input);
+		board.add(keypad);
+		
+		
+	
+		
+		
+		mainp.add(action,BorderLayout.NORTH);
+		mainp.add(board,BorderLayout.SOUTH);
+		
+	
+		
+		mainf.add(mainp);
+		mainf.setVisible(true);
+		mainf.setResizable(false);
+		
+
+	
+		
+		
+		
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		new bbb();
+		
+	}
+
+}
+
+
+class actTestLis implements ActionListener{
+
+	   String type =null;
+	  public void actionPerformed(ActionEvent event) {
+		  System.out.println("여기 들어옴");
+		  String []types = {"간식","경조사비","교통비","관리비","식비","생활비","악세사리","여가","의류","의료","통신비","학용품","회식","기타"};
+		  JButton bu = (JButton) event.getSource();
+		  for(int i =0; i<14; i++){
+			  if (bu.getText().equals(types[i])){
+				  System.out.println("선택한 것은  : "+types[i]);
+		   }
+		  }
+		 
+		  type = bu.getText();
+	  }
+	  
+	  public String getType(){
+		  return type;
+	  }
+	  
+}

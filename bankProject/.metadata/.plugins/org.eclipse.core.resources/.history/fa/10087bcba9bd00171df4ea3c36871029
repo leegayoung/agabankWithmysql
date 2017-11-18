@@ -1,0 +1,508 @@
+package databaseInfos;
+
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Random;
+
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+
+public class DataBaseWork extends DBBaseInfo {
+
+	// 계좌계설
+	public void createAcc(String myName, String ssNumber, String phone, String balance, int password, int pattern,
+			String mlimit, String slimit) {
+		try {
+			Random random = new Random();
+			Class.forName(driver);
+			String acc = "1";
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+			for(int i=0 ;i<14; i++){
+				int randomInt = random.nextInt(10);
+				if(i ==6)acc+="-";
+				acc+= Integer.toString(randomInt);
+			}
+			System.out.println(acc);
+
+			String query = "insert into Acc_info values('" + myName + "','" + ssNumber + "','" + phone + "','" + balance
+					+ "','" + password + "','" + pattern + "','" + mlimit + "','" + slimit + "','" + acc+ "','" + "0" + "')";
+			st = (Statement) con.createStatement();
+			int rs = st.executeUpdate(query);
+			con.close();
+			st.close();
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+
+	}
+
+	// 회원가입
+	public void insetUser(String myName, String ssNumber, String phone) {
+		try {
+			Class.forName(driver);
+
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+
+			String query = "insert into User_info values('" + myName + "','" + ssNumber + "','" + phone + "')";
+			st = (Statement) con.createStatement();
+			int rs = st.executeUpdate(query);
+			con.close();
+			st.close();
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+	}
+
+	//user_info db에 있는 값을 주민번호를 이용해서 리턴
+	public String allInfo_User_Info(String ssNumber, int index) {
+		String em[] = new String[3];
+		try {
+			Class.forName(driver);
+			System.out.println("Ddf");
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+
+			String query = "SELECT * FROM user_info where ssNumber ='" + ssNumber + "'";
+
+			st = (Statement) con.createStatement();
+
+			// execute the query, and get a java resultset
+			ResultSet rs = st.executeQuery(query);
+			while (rs.next()) {
+				em[0] = rs.getString("myName");
+				em[1] = rs.getString("ssNumber");
+				em[2] = rs.getString("phone");
+				System.out.println(em[2]);
+			}
+			// iterate through the java resultset
+			con.close();
+			st.close();
+		} catch (Exception e) {
+			// System.err.println("Got an exception! ");
+			System.err.println(e.getMessage());
+		}
+		try {
+			return em[index];
+		} catch (NullPointerException e) {// 값이 없으면 거짓반환
+			// TODO: handle exception
+			return null;
+		}
+	}
+
+	
+	//acc_info db에 있는 값을 계좌번호를 이용해서 리턴
+	public String allInfo_Acc_Info(String acc, int index) {
+		String em[] = new String[10];
+		System.out.println("dudldl");
+		try {
+			if(con.isClosed()){
+				con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");	
+				st = (Statement) con.createStatement();
+			}
+			
+			Class.forName(driver);
+			String query = "SELECT * FROM acc_info where account ='" + acc + "'";
+			// execute the query, and get a java resultset
+			ResultSet rs = st.executeQuery(query);
+			while (rs.next()) {
+				em[0] = rs.getString("myName");
+				em[1] = rs.getString("ssNumber");
+				em[2] = rs.getString("phone");
+				em[3] = rs.getString("balance");
+				em[4] = rs.getString("passWord");
+				em[5] = rs.getString("pattern");
+				em[6] = rs.getString("mlimit");
+				em[7] = rs.getString("slimit");
+				em[8] = rs.getString("account");
+				em[9] = rs.getString("monthAmount");
+			}
+			// iterate through the java resultset
+			if(con.isClosed()){
+			con.close();
+			st.close();
+			}
+		} catch (Exception e) {
+			// System.err.println("Got an exception! ");
+			System.err.println(e.getMessage());
+		}
+		try {
+			return em[index];
+		} catch (NullPointerException e) {// 값이 없으면 거짓반환
+			// TODO: handle exception
+			return null;
+		}
+	}
+
+	// 계좌가 존재하는지 확인! 값이 똑같으면 있다는 것
+	public boolean Check_Acc(String acc) {
+		String value = allInfo_Acc_Info(acc,8);
+		
+		if(value.equals(acc))
+			return true;
+		else
+		return false;
+
+	}
+
+	// 주민번호가 맞는지보다는 있는지??
+	public boolean Check_ssNumber(String ssNumber) {
+		String value = allInfo_User_Info(ssNumber, 1);
+		if(value.equals(ssNumber))
+			return true;
+		else
+		return false;
+	}
+
+	// 한달 동안 쓴 금액 리턴
+	public String return_MonthAmount(String acc) {
+		String value = allInfo_Acc_Info(acc, 9);
+		if(value.equals(acc))
+			return value;
+		else
+		return null;
+	}
+
+	// 이름을 리턴해준다 -> 거래내역에 넣으려구
+	public String return_Name_Acc_Info(String acc) {
+		String value = allInfo_Acc_Info(acc, 0);
+		if(value.equals(null))
+			return null;
+		return value;	
+	}
+	// 이름을 리턴해준다 근데 주민번호를 이용해서~~
+	public String return_Name_User_Info(String ssNumber) {
+		String value = allInfo_User_Info(ssNumber, 0);
+		System.out.println("dd"+value);
+		if(value.equals(null))
+			return null;
+		return value;	
+	}
+	
+	//핸폰을 리턴해준다 -> 거래내역에 삽입
+	public String return_Phone(String acc) {
+		String value = allInfo_Acc_Info(acc, 2);
+		if(value.equals(null))
+			return null;
+		return value;
+	}
+	//핸폰을 리턴해준다  하지만 주민번호를 통해
+	public String return_Phone_User_Info(String ssNumber) {
+		String value = allInfo_User_Info(ssNumber, 2);
+		if(value.equals(null))
+			return null;
+		return value;
+	}
+
+	// 패스워드가 맞는지
+	public boolean match_Password(String acc, int pw) {
+		String value = allInfo_Acc_Info(acc, 4);
+		System.out.println(value);
+		if(value == null)
+		{
+			return false;
+		}
+		
+		if(value.equals(String.valueOf(pw)))
+			return true;
+		else
+			return false;
+
+	}
+	//출금
+	public void withdraw(String acc, String money, int type) {
+
+		String em = null;
+		String []types = {"간식","경조사비","교통비","관리비","식비","생활비","악세사리","여가","의류","의료","통신비","학용품","회식","기타"};
+		try {
+			Class.forName(driver);
+
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+			st = (Statement) con.createStatement();
+			
+			int DepositAmount = Integer.parseInt(money); // 뺄값, 출금액
+			String balance = allInfo_Acc_Info(acc,3); // 내가 가지고 이쓴ㄴ 값
+			//System.out.println(balance);
+			DepositAmount = Integer.parseInt(balance) - DepositAmount;
+			System.out.println(DepositAmount);
+			boolean check =  withdraw_possible(acc, DepositAmount, money);
+			if(check == false)return;
+			add_MonthAmount(acc,money);
+			
+			
+			String query = "update acc_info set balance='" + DepositAmount + "'" + "where account='" + acc + "'";
+			
+			st.executeUpdate(query);
+			//System.out.println("마지막 : " + allInfo_Acc_Info("1111111-10101010",3));
+			con.close();
+			st.close();
+			SavingTransaction(return_Name_Acc_Info(acc)," ",return_Phone(acc),types[type],"-"+money,Integer.toString(DepositAmount),"출금",acc);
+
+		} catch (Exception e) {
+			System.out.println("여기 오류1");
+			System.err.println(e.getMessage());
+		}
+
+	}
+
+	//입금
+	public void deposit(String acc, String money) {
+		// String em = null;
+		try {
+			Class.forName(driver);
+
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+			st = (Statement) con.createStatement();
+			
+			int DepositAmount = Integer.parseInt(money); // 입금액
+			String balance = allInfo_Acc_Info(acc,3); // 내가 가지고 이쓴ㄴ 값
+			//System.out.println(balance);
+			DepositAmount = Integer.parseInt(balance) + DepositAmount;
+			String query = "update acc_info set balance='" + DepositAmount + "'" + "where account='" + acc + "'";
+			
+			st.executeUpdate(query);
+			System.out.println("마지막 : " + allInfo_Acc_Info("1111111-10101010",3));
+			con.close();
+			st.close();
+			SavingTransaction(return_Name_Acc_Info(acc)," ",return_Phone(acc)," ",money,Integer.toString(DepositAmount),"입금",acc);
+
+		} catch (Exception e) {
+			System.out.println("여기 오류");
+			System.err.println(e.getMessage());
+		}
+
+	}
+	
+	//무통장실행
+	public void noPassbook(String ssNumber, String receiverAcc , String money){
+		try {
+			Class.forName(driver);
+
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+			st = (Statement) con.createStatement();
+			
+			int DepositAmount = Integer.parseInt(money); // 입금액
+			String balance = allInfo_Acc_Info(receiverAcc,3); // 내가 가지고 이쓴ㄴ 값
+			//System.out.println(balance);
+			DepositAmount = Integer.parseInt(balance) + DepositAmount;
+			String query = "update acc_info set balance='" + DepositAmount + "'" + "where account='" + receiverAcc + "'";
+			st.executeUpdate(query);
+			//System.out.println("마지막 : " + allInfo_Acc_Info(receiverAcc,3));
+			con.close();
+			st.close();
+			SavingTransaction(return_Name_Acc_Info(receiverAcc),return_Name_User_Info(ssNumber),return_Phone(receiverAcc),"분류",money,Integer.toString(DepositAmount),"입금",receiverAcc);
+			
+		} catch (Exception e) {
+			System.out.println("여기 오류 noPassbook");
+			System.err.println(e.getMessage());
+		}
+
+	}
+	
+	//송금
+	public void remittance(String myAcc, String receiverAcc, String money,int type){
+		String []types = {"간식","경조사비","교통비","관리비","식비","생활비","악세사리","여가","의류","의료","통신비","학용품","회식","기타"};
+		try {
+			Class.forName(driver);
+
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+			st = (Statement) con.createStatement();
+			
+			//내 계좌에서 출금
+			int DepositAmount = Integer.parseInt(money); // 출금액
+			String balance = allInfo_Acc_Info(myAcc,3); // 내가 가지고 이쓴ㄴ 값
+			DepositAmount = Integer.parseInt(balance) - DepositAmount; //db에 들어갈, 모든 계산이 끝난 값
+			boolean check =  withdraw_possible(myAcc, DepositAmount, money);
+			if(check == false)return;
+			add_MonthAmount(myAcc,money);
+			
+			String query = "update acc_info set balance='" + DepositAmount + "'" + "where account='" + myAcc + "'";
+			st.executeUpdate(query);
+			SavingTransaction(return_Name_Acc_Info(myAcc),return_Name_Acc_Info(receiverAcc),return_Phone(myAcc),types[type],"-"+money,Integer.toString(DepositAmount),"송금",myAcc);
+			
+			//상대방 계좌에 입금
+			DepositAmount = Integer.parseInt(money);;
+			balance = allInfo_Acc_Info(receiverAcc,3); // 상대방이 가지고 있는 값
+			DepositAmount = Integer.parseInt(balance) + DepositAmount;
+			query = "update acc_info set balance='" + DepositAmount + "'" + "where account='" + receiverAcc + "'";
+			st.executeUpdate(query);
+			SavingTransaction(return_Name_Acc_Info(receiverAcc),return_Name_Acc_Info(myAcc),return_Phone(receiverAcc)," ",money,Integer.toString(DepositAmount),"입금",receiverAcc);
+			con.close();
+			st.close();
+			
+			
+		} catch (Exception e) {
+			System.out.println("여기 오류 remittance");
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	//거래내역 추가
+	public void SavingTransaction(String myName, String receiver, String phone, String type,String amount,
+			String balance, String note, String ssNumber) {
+		try {
+			Class.forName(driver);
+
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+
+			String query = "insert into Transaction values(" + "now()" + ",'" + myName + "','" + receiver+"','" + phone+"','" 
+			+ type+"','" + amount+"','" + balance+"','" + note+"','" + ssNumber + "')";
+			st = (Statement) con.createStatement();
+			st.executeUpdate(query);
+			con.close();
+			st.close();
+		} catch (Exception exc) {
+			exc.printStackTrace();
+		}
+	}
+	
+	public boolean withdraw_possible(String myAcc, int DepositAmount, String money){
+		if (DepositAmount < 0) {
+			System.out.println("잔액이 부족합니다");
+			return false;
+		}
+		if(Integer.parseInt(allInfo_Acc_Info(myAcc,7)) < Integer.parseInt(money)){
+			System.out.println("지출한도가 넘은 금액입니다");
+			return false;
+		}
+		if(Integer.parseInt(allInfo_Acc_Info(myAcc,9))+Integer.parseInt(money) > Integer.parseInt(allInfo_Acc_Info(myAcc,6))){
+			System.out.println("한달지출한도를 넘었습니다");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	//내가 출금 했을때 한달 지출금액을 늘려준다
+	public void add_MonthAmount(String myAcc,String money){
+		int monthAmount = Integer.parseInt(allInfo_Acc_Info(myAcc,9));
+		monthAmount = monthAmount + Integer.parseInt(money);
+		try {
+			String query = "update acc_info set monthAmount='" + monthAmount + "'" + "where account='" + myAcc + "'";
+			st.executeUpdate(query);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("그래서 한달동안 쓴 금액은 : "+Integer.parseInt(allInfo_Acc_Info(myAcc,9)));
+	}
+	
+	public void balancecheck(String acc){
+		String em[] = new String[10];
+		try {
+			Class.forName(driver);
+
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+
+			String query = "SELECT * FROM Transaction where account ='" + acc + "'";
+
+			st = (Statement) con.createStatement();
+
+			// execute the query, and get a java resultset
+			ResultSet rs = st.executeQuery(query);
+			int i =0;
+			while (rs.next() && i<15 ) {
+				em[0] = rs.getString("date");
+				em[1] = rs.getString("myName");
+				em[2] = rs.getString("receiver");
+				em[3] = rs.getString("phone");
+				em[4] = rs.getString("type");
+				em[5] = rs.getString("amount");
+				em[6] = rs.getString("balance");
+				em[7] = rs.getString("note");
+				em[8] = rs.getString("account");
+				System.out.println(em[0]+", "+em[1]+", "+em[2]+", "+em[3]+", "+em[4]+", "+em[5]+", "+em[6]+", "+em[7]+", "+em[8]);
+				i++;
+			}
+			// iterate through the java resultset
+			con.close();
+			st.close();
+		} catch (Exception e) {
+			// System.err.println("Got an exception! ");
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	// 타입으로 거래내역 출력
+	public void typecheck(String acc, String type){
+		String em[] = new String[10];
+		try {
+			Class.forName(driver);
+
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+
+			String query = "SELECT * FROM Transaction where account ='" + acc + "' and type ='"+type+"'";
+
+			st = (Statement) con.createStatement();
+
+			// execute the query, and get a java resultset
+			ResultSet rs = st.executeQuery(query);
+			int i =0;
+			while (rs.next() && i<15 ) {
+				em[0] = rs.getString("date");
+				em[1] = rs.getString("myName");
+				em[2] = rs.getString("receiver");
+				em[3] = rs.getString("phone");
+				em[4] = rs.getString("type");
+				em[5] = rs.getString("amount");
+				em[6] = rs.getString("balance");
+				em[7] = rs.getString("note");
+				em[8] = rs.getString("account");
+				System.out.println(em[0]+", "+em[1]+", "+em[2]+", "+em[3]+", "+em[4]+", "+em[5]+", "+em[6]+", "+em[7]+", "+em[8]);
+				i++;
+			}
+			// iterate through the java resultset
+			con.close();
+			st.close();
+		} catch (Exception e) {
+			// System.err.println("Got an exception! ");
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	
+	
+	public void rename(String ssNumber, String name){
+		try {
+			Class.forName(driver);
+
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+			st = (Statement) con.createStatement();
+			
+			
+			String query = "update user_info set myName='" + name + "'" + "where ssNumber='" + ssNumber + "'";
+			st.executeUpdate(query);
+			String query2 = "update acc_info set myName='" + name + "'" + "where ssNumber='" + ssNumber + "'";
+			st.executeUpdate(query2);
+			
+			con.close();
+			st.close();
+			
+			
+		} catch (Exception e) {
+			System.out.println("여기 오류 rename");
+			System.err.println(e.getMessage());
+		}
+	}
+	
+	public void repassword(String acc, String password){
+		try {
+			Class.forName(driver);
+
+			con = (Connection) DriverManager.getConnection(jdbcUrl, "bank1", "1111");
+			st = (Statement) con.createStatement();
+			
+			
+			String query = "update acc_info set password='" + password + "'" + "where account='" + acc + "'";
+			st.executeUpdate(query);
+			
+			con.close();
+			st.close();
+			
+			
+		} catch (Exception e) {
+			System.out.println("여기 오류 repassword");
+			System.err.println(e.getMessage());
+		}
+	}
+}

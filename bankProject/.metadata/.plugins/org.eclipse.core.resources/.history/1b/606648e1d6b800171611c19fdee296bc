@@ -1,0 +1,71 @@
+package libray;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import Aga.buttonTest;
+
+public class aaa extends JFrame{
+		String type = null;
+	  JTextArea testArea = new JTextArea();
+		public static void main(String[] args) {
+			// TODO Auto-generated method stub
+			new aaa();
+		}
+		
+		public aaa(){
+			JPanel panel = new JPanel(); //패널을 생성 
+			  panel.setLayout(null); //패널의 Layout을 NULL
+			  panel.setBounds(0, 0, 400, 500); //패널의 크기 및 위치 지정 (x,y로 부터 넓이(width, 높이(height))
+			  
+			  //JTextArea 생성 
+			   testArea.setBounds(50, 50, 300, 300); //JTeatArea 크기 및 위치 지정 
+			   testArea.setEditable(false); //실행시 JtextArea edit 금지 (글을 쓸 수 없음) true면 가능
+			  
+			   JButton a = new JButton("식용품");  //버튼 생성
+			   JButton b = new JButton("쇼핑");
+			   JButton c = new JButton("결혼");
+			  a.setBounds(50, 375, 80, 50); //크기 지정 
+			  b.setBounds(160, 375, 80, 50);
+			  c.setBounds(270, 375, 80, 50);
+			  
+			  
+			  
+			  panel.add(testArea); //패널에 Textarea add
+			  panel.add(a); //패널에 버튼 add
+			  panel.add(b); 
+			  panel.add(c);
+			  
+			  
+			  add(panel);
+			  
+			  a.addActionListener(new TestListenr());
+			  
+			  setSize(500,500);
+			  setVisible(true);
+			  System.out.println(type);
+		}
+
+}
+
+class TestListenr implements ActionListener{
+
+	aaa b = new aaa();
+	  public void actionPerformed(ActionEvent event) {
+		  
+		  JButton bu = (JButton) event.getSource();
+		  bu.setText("액션");
+		  if (bu.getText().equals("액션")){
+	    	b.type = "쇼핑몰";
+	   }else if (event.getSource() == "쇼핑"){
+	    b.testArea.append("b버튼을 눌르셨습니다.\n");
+	   }else if (event.getSource() == "결혼"){
+	    b.testArea.append("c버튼을 눌르셨습니다.\n");
+	   }
+	  }
+	 }

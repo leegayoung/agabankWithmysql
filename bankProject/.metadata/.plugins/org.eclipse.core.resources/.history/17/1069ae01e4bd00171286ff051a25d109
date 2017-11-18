@@ -1,0 +1,155 @@
+package Aga;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
+
+public class Ttran{
+	
+	JFrame mainf = new JFrame();
+	JPanel mainp = new JPanel();
+	Font font1 = new Font("배달의민족 주아", Font.PLAIN, 50) ;
+	Font font1_1 = new Font("배달의민족 주아", Font.PLAIN, 40) ;
+	Font font2 = new Font("-윤고딕110", Font.PLAIN, 20) ;
+	
+	public Ttran(){
+		
+		mainf.setSize(1280,800);
+		mainp.setSize(1280,800);
+		
+		JPanel action = new JPanel();
+		JPanel board = new JPanel();
+		JPanel keypad = new JPanel();
+		JPanel input = new JPanel();
+		JPanel pbt = new JPanel();
+		
+		mainf.setLayout(null);
+		mainp.setLayout(null);
+		action.setLayout(null);
+		board.setLayout(null);
+		keypad.setLayout(new GridLayout(5,3));
+		input.setLayout(null);
+		
+		pbt.setSize(300,100); //액션바 버튼
+		action.setSize(1280,100); //액션바
+		board.setSize(1280,800); //하단 패널
+		input.setSize(855,620); //입력창
+		keypad.setSize(370,620); //키패드
+		
+		board.setLocation(0,-10);
+		
+		JButton jb = new JButton(new ImageIcon("image/backbt.png"));
+		jb.setBorderPainted(false);
+		jb.setContentAreaFilled(false);
+		jb.setFocusPainted(false);
+	
+		JLabel jla = new JLabel("잔액조회 ");
+		jla.setFont(font1);
+		jla.setForeground(Color.white);
+	
+	
+		pbt.add(jb,BorderLayout.WEST);
+		pbt.setBackground(new Color(46,89,138));
+		pbt.add(jla);
+		
+		action.setBackground(new Color(46,89,138));
+		action.add(pbt);
+	
+		
+		input.setLocation(20,130);
+		input.setBackground(Color.white);
+		
+		
+		
+		//통장화면 만들기
+		ImageIcon bg = new ImageIcon("image/bankbook.png");
+		
+		
+		JPanel bankbook = new JPanel() {
+			public void paintComponent(Graphics g) {
+				g.drawImage(bg.getImage(), 0, 0, null);
+
+			}
+		};
+		bankbook.setBounds(0, 0, 835, 600);
+		bankbook.setLocation(10,20);
+		
+		
+		input.add(bankbook);
+	
+		keypad.setLocation(890,130); 
+		keypad.setBackground(new Color(209,216,240));
+		
+	
+		board.setBackground(new Color(209,216,240));
+		
+
+		String []types = {"간식","경조사비","교통비","관리비","식비","생활비","악세사리","여가","의류","의료","통신비","학용품","회식","기타"};
+
+		JButton tb[] = new JButton[14];
+		
+		for(int i = 0 ; i < 14 ;i++){
+			
+			tb[i] = new JButton(types[i]);
+			
+			tb[i].setFont(font2);
+			tb[i].setBackground(Color.white);
+			tb[i].setBorder(new LineBorder(new Color(194,201,225), 3));
+			
+			keypad.add(tb[i]);
+		}
+				
+		
+		//보드에 추가하기
+		board.add(input);
+		board.add(keypad);
+		
+		
+		board.add(input);
+		board.add(keypad);
+		
+
+		
+		mainp.add(action,BorderLayout.NORTH);
+		mainp.add(board,BorderLayout.SOUTH);
+		
+	
+		
+		mainf.add(mainp);
+		mainf.setVisible(true);
+		mainf.setResizable(false);
+		
+
+		jb.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	mainf.revalidate();
+		    	mainf.dispose();
+				AgaMenu AgaMenu= new AgaMenu();
+		    }
+		});
+		
+		
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		new Ttran();
+		
+	}
+
+}

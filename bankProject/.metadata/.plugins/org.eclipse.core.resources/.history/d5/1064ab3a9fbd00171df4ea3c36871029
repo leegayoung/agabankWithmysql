@@ -1,0 +1,8 @@
+package Aga;
+
+public class dataAll {
+
+	static String name = null;
+	static String myAcc = null;
+	static String name = null;
+}

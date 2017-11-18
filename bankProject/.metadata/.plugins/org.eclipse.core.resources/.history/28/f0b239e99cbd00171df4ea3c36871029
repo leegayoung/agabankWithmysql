@@ -1,0 +1,273 @@
+package Aga;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridLayout;
+import java.awt.TextField;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+import Aga.Iacc.addText;
+
+public class Tpattern{
+	
+	JFrame mainf = new JFrame();
+	JPanel mainp = new JPanel();
+	
+	//Font Styles
+	Font font1 = new Font("배달의민족 주아", Font.PLAIN, 50) ;
+	Font font1_1 = new Font("배달의민족 주아", Font.PLAIN, 40) ;
+	Font font2 = new Font("-윤고딕110", Font.PLAIN, 20) ;
+	
+	public Tpattern(){
+		
+		
+		//메인프레임, 메인패널 사이즈조절
+		mainf.setSize(1280,800);
+		mainp.setSize(1280,800);
+		
+		JPanel action = new JPanel();
+		JPanel board = new JPanel();
+		JPanel keypad = new JPanel();
+		JPanel input = new JPanel();
+		JPanel pbt = new JPanel();
+		JPanel patternP = new JPanel();
+		
+		
+		//기존 레이아웃 해제
+		mainf.setLayout(null);
+		mainp.setLayout(null);
+		action.setLayout(null);
+		board.setLayout(null);
+		input.setLayout(null);
+		
+		//Gird로 레아이웃
+		keypad.setLayout(new GridLayout(4,3));
+		patternP.setLayout(new GridLayout(3,3));
+		
+		
+		//사이즈 조절
+		pbt.setSize(300,100); //액션바 버튼
+		action.setSize(1280,100); //액션바
+		board.setSize(1280,800); //하단 패널
+		input.setSize(855,620); //입력창
+		keypad.setSize(380,500); //키패드
+		patternP.setSize(500,500); // 패턴
+		
+		//보드 위치 변경
+		board.setLocation(0,-10);
+		
+		//뒤로가기 버튼
+		JButton jb = new JButton(new ImageIcon("image/backbt.png"));
+		jb.setBorderPainted(false);
+		jb.setContentAreaFilled(false);
+		jb.setFocusPainted(false);
+	
+		//현재 페이지 이름
+		JLabel jla = new JLabel("잔액조회 ");
+		jla.setFont(font1);
+		jla.setForeground(Color.white);
+	
+	
+
+		pbt.add(jb,BorderLayout.WEST);
+		pbt.setBackground(new Color(46,89,138));
+		pbt.add(jla);
+		
+		//액션바에 저장
+		action.setBackground(new Color(46,89,138));
+		action.add(pbt);
+	
+		//입력화면 구성
+		input.setLocation(20,130);
+		input.setBackground(Color.white);
+		
+		JPanel textp = new JPanel();
+		textp.setLayout(null);
+		JLabel textl = new JLabel("패턴를 입력해주세요.");
+		textl.setFont(font2);
+		textl.setForeground(Color.gray);
+		textp.setBackground(Color.white);
+		textp.add(textl);
+		textl.setSize(200,40);
+		textp.setSize(200,40);
+		textp.setLocation(350,20);
+		input.add(textp);
+	
+		//패턴 위치, 색상 지정
+		patternP.setLocation(200,80);
+		patternP.setBackground(Color.white);
+		
+		
+		JButton pt[] = new JButton[9];
+		
+		for(int i = 0 ; i < 9 ; i++){
+			
+			pt[i] = new JButton(new ImageIcon("image/pt1.png"));
+			
+			//패턴노드 패널에 추가
+			patternP.add(pt[i]);
+			
+			//패턴노드버튼 기존 디자인 제거
+			pt[i].setBorderPainted(false);
+			pt[i].setContentAreaFilled(false);
+			pt[i].setFocusPainted(false);
+			
+		}
+		
+	
+		JButton okbt = new JButton(new ImageIcon("image/checked.png"));
+		JButton nobt = new JButton(new ImageIcon("image/refresh.png"));
+		
+		okbt.setLayout(null);
+		nobt.setLayout(null);
+		
+		okbt.setSize(64,64);
+		nobt.setSize(64,64);
+		
+		nobt.setLocation(102,380);
+		okbt.setLocation(100,460);
+		
+		okbt.setFont(font2);
+		nobt.setFont(font2);
+		
+		okbt.setBorderPainted(false);
+		okbt.setContentAreaFilled(false);
+		okbt.setFocusPainted(false);
+		
+		nobt.setBorderPainted(false);
+		nobt.setContentAreaFilled(false);
+		nobt.setFocusPainted(false);
+		
+		input.add(okbt);
+		input.add(nobt);
+		
+		
+		
+		
+
+		//입력화면에 패턴추가
+		input.add(patternP);
+		
+		//키패드 설정
+		keypad.setLocation(890,190);
+		keypad.setBackground(new Color(209,216,240));
+
+		board.setBackground(new Color(209,216,240));
+		
+		//키패드 번호부여
+JButton b[] = new JButton[12];
+	
+		
+		for(int i = 0 ; i < 12; i++){
+			
+			b[i] = new JButton(new ImageIcon("image/key"+i+".png"));	
+			b[i].setBorderPainted(false);
+			b[i].setContentAreaFilled(false);
+			b[i].setFocusPainted(false);
+			b[i].setFont(font1);
+			b[i].setName(i+"b");
+			
+		}
+		
+		
+		
+		keypad.add(b[7]);
+		keypad.add(b[8]);
+		keypad.add(b[9]);
+		keypad.add(b[4]);
+		keypad.add(b[5]);
+		keypad.add(b[6]);
+		keypad.add(b[1]);
+		keypad.add(b[2]);
+		keypad.add(b[3]);
+		keypad.add(b[10]);
+		keypad.add(b[0]);
+		keypad.add(b[11]);
+		
+		
+		JButton pattern = new JButton(">> 비밀번호로 입력하기");
+		pattern.setFont(new Font("배달의민족 주아",Font.PLAIN, 20));
+		
+		pattern.setForeground(new Color(0,36,97));
+		pattern.setSize(300,100);
+		pattern.setLocation(600,-10);
+		
+		pattern.setBorderPainted(false);
+		pattern.setContentAreaFilled(false);
+		pattern.setFocusPainted(false);
+		
+		input.add(pattern);
+		board.add(input);
+		board.add(keypad);
+	
+		
+		
+		mainp.add(action,BorderLayout.NORTH);
+		mainp.add(board,BorderLayout.SOUTH);
+		
+		
+		
+		
+		mainf.add(mainp);
+		mainf.setVisible(true);
+		mainf.setResizable(false);
+		
+
+
+		pattern.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	mainf.revalidate();
+		    	mainf.dispose();
+				Tpass Tpass= new Tpass();
+		    }
+		});
+		
+		nobt.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	mainf.revalidate();
+		    	mainf.dispose();
+		    	Tpattern Tpattern= new Tpattern();
+		    }
+		});
+		
+		okbt.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	mainf.revalidate();
+		    	mainf.dispose();
+				Ttran Ttran= new Ttran();
+		    }
+		});
+		
+		
+
+		jb.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		    	mainf.revalidate();
+		    	mainf.dispose();
+				AgaMenu AgaMenu= new AgaMenu();
+		    }
+		});
+		
+		
+		
+		
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+		new Tpattern();
+		
+	}
+}

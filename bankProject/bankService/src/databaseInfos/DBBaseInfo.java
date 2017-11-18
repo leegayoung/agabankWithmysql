@@ -1,0 +1,21 @@
+package databaseInfos;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.Statement;
+
+public class  DBBaseInfo {
+	 static Connection con = null;
+	 static Statement st = null;
+	 static ResultSet rs = null;
+	 String jdbcUrl = "jdbc:mysql://localhost:3306/bank1?useSSL=false&autoReconnect=true" ;
+	// <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1/database?autoReconnect=true</property>
+	 String user = "bank1";
+	 String pass = "1111";
+	 String driver = "com.mysql.jdbc.Driver";
+	 public DBBaseInfo(){
+		
+	 }
+}
